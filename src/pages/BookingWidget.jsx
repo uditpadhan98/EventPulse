@@ -5,9 +5,7 @@ import { Navigate } from "react-router-dom";
 import { UserContext } from "../UserContext.jsx";
 
 export default function BookingWidget({ event }) {
-  const [checkIn, setCheckIn] = useState("");
-  const [checkOut, setCheckOut] = useState("");
-  const [numberOfGuests, setNumberOfGuests] = useState(1);
+  const [startDate, setStartDate] = useState("");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [redirect, setRedirect] = useState("");
@@ -21,13 +19,13 @@ export default function BookingWidget({ event }) {
 
   async function bookThisEvent() {
     const response = await axios.post("http://localhost:4000/api/bookings", {
-      checkIn,
-      checkOut,
+      startDate,
       name,
       phone,
       event: event._id,
     });
     const bookingId = response.data._id;
+    // setRedirect('/');
     setRedirect(`/account/bookings/${bookingId}`);
   }
 
@@ -37,37 +35,17 @@ export default function BookingWidget({ event }) {
 
   return (
     <div className="bg-white shadow p-4 rounded-2xl">
-      {/* <div className="text-2xl text-center">
-        Price: ${place.price} / per night
-      </div> */}
       <div className="border rounded-2xl mt-4">
         <div className="flex">
           <div className="py-3 px-4">
-            <label>Check in:</label>
+            <label>Date :</label>
             <input
               type="date"
-              value={checkIn}
-              onChange={(ev) => setCheckIn(ev.target.value)}
-            />
-          </div>
-          <div className="py-3 px-4 border-l">
-            <label>Check out:</label>
-            <input
-              type="date"
-              value={checkOut}
-              onChange={(ev) => setCheckOut(ev.target.value)}
+              value={startDate}
+              onChange={(ev) => setStartDate(ev.target.value)}
             />
           </div>
         </div>
-        {/* <div className="py-3 px-4 border-t">
-          <label>Number of guests:</label>
-          <input
-            type="number"
-            value={numberOfGuests}
-            onChange={(ev) => setNumberOfGuests(ev.target.value)}
-          />
-        </div> */}
-        
           <div className="py-3 px-4 border-t">
             <label>Your full name:</label>
             <input

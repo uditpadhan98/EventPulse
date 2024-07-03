@@ -1,23 +1,21 @@
-import {Link, useParams} from "react-router-dom";
-import {useEffect, useState} from "react";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import BookingWidget from "./BookingWidget";
 
 export default function EventPage() {
-  const {id} = useParams();
-  const [events,setEvents] = useState(null);
+  const { id } = useParams();
+  const [events, setEvents] = useState(null);
   useEffect(() => {
     if (!id) {
       return;
     }
-    axios.get(`http://localhost:4000/api/events/${id}`).then(response => {
+    axios.get(`http://localhost:4000/api/events/${id}`).then((response) => {
       setEvents(response.data);
     });
   }, [id]);
 
-  if (!events) return '';
-
-
+  if (!events) return "";
 
   return (
     <div className="mt-4 bg-gray-100 -mx-8 px-8 pt-8">
@@ -30,8 +28,18 @@ export default function EventPage() {
             <h2 className="font-semibold text-2xl">Description</h2>
             {events.description}
           </div>
-          Check-in: {events.checkIn}<br />
-          Check-out: {events.checkOut}<br />
+
+          <p className="font-bold">
+            Date:{" "}
+            {new Date(events.startDate).toLocaleDateString(undefined, {
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+          </p>
+          <p className="font-bold">
+            Time: {events.time.hour} : {events.time.minute}
+          </p>
         </div>
         <div>
           <BookingWidget event={events} />

@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
 
 const bookingSchema = new mongoose.Schema({
-  event: {type:mongoose.Schema.Types.ObjectId, required:true, ref:'Events'},
+  event: {type:mongoose.Schema.Types.ObjectId, required:true, ref:'Event'},
   user: {type:mongoose.Schema.Types.ObjectId, required:true},
-  checkIn: {type:Date, required:true},
-  checkOut: {type:Date, required:true},
+  startDate: {type:Date, required:true},
   name: {type:String, required:true},
   phone: {type:String, required:true},
 });

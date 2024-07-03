@@ -1,6 +1,5 @@
 import {createContext, useEffect, useState} from "react";
 import axios from "axios";
-import {data} from "autoprefixer";
 
 export const UserContext = createContext({});
 
@@ -10,6 +9,7 @@ export function UserContextProvider({children}) {
   useEffect(() => {
     if (!user) {
       axios.get('http://localhost:4000/api/profile').then(({data}) => {
+        // console.log(data);
         setUser(data);
         setReady(true);
       });

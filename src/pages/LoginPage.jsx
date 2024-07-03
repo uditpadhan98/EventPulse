@@ -13,6 +13,7 @@ export default function LoginPage() {
     try {
       const { data } = await axios.post("http://localhost:4000/api/login", { email, password });
       setUser(data);
+      // console.log(data);
       alert("Login successful");
       setRedirect(true);
     } catch (e) {
