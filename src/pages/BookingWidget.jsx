@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 import { UserContext } from "../UserContext.jsx";
 import { toast } from "react-toastify";
 import { ProgressContext } from './Layout';
+import { BASE_URL } from "../Helper";
 
 export default function BookingWidget({ event }) {
   const [name, setName] = useState("");
@@ -33,7 +34,7 @@ export default function BookingWidget({ event }) {
       return;
     }
     try {
-      const response = await axios.post("http://localhost:4000/api/bookings", {
+      const response = await axios.post(`${BASE_URL}/api/bookings`, {
         name,
         phone,
         event: event._id,

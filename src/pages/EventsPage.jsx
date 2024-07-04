@@ -3,6 +3,7 @@ import AccountNav from "./AccountNav";
 import {useEffect, useState,useContext} from "react";
 import axios from "axios";
 import { ProgressContext } from './Layout';
+import { BASE_URL } from "../Helper";
 
 export default function EventsPage() {
   const [events,setEvents] = useState([]);
@@ -10,7 +11,7 @@ export default function EventsPage() {
 
   useEffect(() => {
     setProgress(30);
-    axios.get('http://localhost:4000/api/user-events').then(({data}) => {
+    axios.get(`${BASE_URL}/api/user-events`).then(({data}) => {
       setEvents(data);
       setProgress(100);
       // console.log(data);

@@ -4,6 +4,7 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ProgressContext } from './Layout';
+import { BASE_URL } from "../Helper";
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState([]);
@@ -13,7 +14,7 @@ export default function BookingsPage() {
     const fetchBookings = async () => {
       setProgress(30);
       try {
-        const response = await axios.get('http://localhost:4000/api/bookings');
+        const response = await axios.get(`${BASE_URL}/api/bookings`);
         setBookings(response.data);
         setProgress(100);
         // console.log(response.data); 

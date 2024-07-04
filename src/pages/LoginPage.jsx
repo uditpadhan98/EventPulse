@@ -4,6 +4,7 @@ import axios from "axios";
 import { UserContext } from "../UserContext.jsx";
 import { toast } from "react-toastify";
 import { ProgressContext } from './Layout';
+import { BASE_URL } from "../Helper";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -16,7 +17,7 @@ export default function LoginPage() {
     ev.preventDefault();
     setProgress(30);
     try {
-      const { data } = await axios.post("http://localhost:4000/api/login", {
+      const { data } = await axios.post(`${BASE_URL}/api/login`, {
         email,
         password,
       });

@@ -3,6 +3,7 @@ import { useEffect, useState ,useContext} from "react";
 import axios from "axios";
 import { ProgressContext } from './Layout';
 import { toast } from 'react-toastify';
+import { BASE_URL } from "../Helper";
 
 export default function BookingPage() {
   const { id } = useParams();
@@ -14,7 +15,7 @@ export default function BookingPage() {
       if (id) {
         setProgress(30); // Start loading
         try {
-          const response = await axios.get("http://localhost:4000/api/bookings");
+          const response = await axios.get(`${BASE_URL}/api/bookings`);
           const foundBooking = response.data.find(({ _id }) => _id === id);
           if (foundBooking) {
             setBooking(foundBooking);

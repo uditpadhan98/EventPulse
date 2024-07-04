@@ -5,6 +5,7 @@ import { Navigate, useParams } from "react-router-dom";
 import UploadWidget from "../UploadWidget";
 import { toast } from "react-toastify";
 import { ProgressContext } from './Layout';
+import { BASE_URL } from "../Helper";
 
 export default function EventFormPage() {
   const { id } = useParams();
@@ -22,7 +23,7 @@ export default function EventFormPage() {
       return;
     }
     setProgress(30);
-    axios.get("http://localhost:4000/api/events/" + id)
+    axios.get(`${BASE_URL}/api/events/`+id)
       .then((response) => {
         const { data } = response;
         setTitle(data.title);
@@ -79,7 +80,7 @@ export default function EventFormPage() {
     try {
       if (id) {
         // Update event
-        await axios.put("http://localhost:4000/api/events", {
+        await axios.put(`${BASE_URL}/api/events`, {
           id,
           ...eventData,
         });
@@ -94,7 +95,7 @@ export default function EventFormPage() {
         setProgress(100);
       } else {
         // Create new event
-        await axios.post("http://localhost:4000/api/events", eventData);
+        await axios.post(`${BASE_URL}/api/events`, eventData);
         toast.success("Event updated successfully", {
           position: "top-right",
           autoClose: 5000,

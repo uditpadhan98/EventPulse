@@ -5,6 +5,7 @@ import HomePage from "./HomePage";
 import Footer from "./Footer";
 import { toast } from "react-toastify";
 import { ProgressContext } from './Layout';
+import { BASE_URL } from "../Helper";
 
 export default function IndexPage() {
   const [events, setEvents] = useState([]);
@@ -20,7 +21,7 @@ export default function IndexPage() {
     const fetchEvents = async () => {
       setProgress(30); // Start loading
       try {
-        const response = await axios.get("http://localhost:4000/api/events");
+        const response = await axios.get(`${BASE_URL}/api/events`);
         setEvents(response.data);
         setProgress(100); // Loading complete
       } catch (error) {

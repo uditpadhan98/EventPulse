@@ -3,6 +3,7 @@ import { useEffect, useState,useContext } from "react";
 import axios from "axios";
 import BookingWidget from "./BookingWidget";
 import { ProgressContext } from './Layout';
+import { BASE_URL } from "../Helper";
 
 export default function EventPage() {
   const { id } = useParams();
@@ -14,7 +15,7 @@ export default function EventPage() {
       return;
     }
     setProgress(30);
-    axios.get(`http://localhost:4000/api/events/${id}`).then((response) => {
+    axios.get(`${BASE_URL}/api/events/${id}`).then((response) => {
       setEvents(response.data);
       setProgress(100);
       // console.log(response.data);

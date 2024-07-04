@@ -5,6 +5,7 @@ import axios from "axios";
 import AccountNav from "./AccountNav.jsx";
 import { toast } from "react-toastify";
 import { ProgressContext } from './Layout';
+import { BASE_URL } from "../Helper";
 
 export default function ProfilePage() {
   const [redirect, setRedirect] = useState(null);
@@ -15,7 +16,7 @@ export default function ProfilePage() {
   async function logout() {
     setProgress(30);
     try {
-      await axios.post("http://localhost:4000/api/logout");
+      await axios.post(`${BASE_URL}/api/logout`);
       toast.success("Logged-out successfully", {
         position: "top-right",
         autoClose: 5000,

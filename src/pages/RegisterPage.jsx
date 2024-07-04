@@ -3,6 +3,7 @@ import { useState,useContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { ProgressContext } from './Layout';
+import { BASE_URL } from "../Helper";
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -16,7 +17,7 @@ export default function RegisterPage() {
     ev.preventDefault();
     setProgress(30);
     try {
-      await axios.post("http://localhost:4000/api/register", {
+      await axios.post(`${BASE_URL}/api/register`, {
         name,
         club,
         email,

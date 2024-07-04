@@ -1,5 +1,6 @@
 import {createContext, useEffect, useState} from "react";
 import axios from "axios";
+import { BASE_URL } from "./Helper";
 
 export const UserContext = createContext({});
 
@@ -8,7 +9,7 @@ export function UserContextProvider({children}) {
   const [ready,setReady] = useState(false);
   useEffect(() => {
     if (!user) {
-      axios.get('http://localhost:4000/api/profile').then(({data}) => {
+      axios.get(`${BASE_URL}/api/profile`).then(({data}) => {
         // console.log(data);
         setUser(data);
         setReady(true);
