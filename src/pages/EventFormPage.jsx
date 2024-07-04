@@ -1,8 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState,useContext } from "react";
 import axios from "axios";
 import AccountNav from "./AccountNav";
 import { Navigate, useParams } from "react-router-dom";
 import UploadWidget from "../UploadWidget";
+import { toast } from "react-toastify";
+import { ProgressContext } from './Layout';
 
 export default function EventFormPage() {
   const { id } = useParams();
@@ -13,20 +15,35 @@ export default function EventFormPage() {
   const [startDate, setStartDate] = useState("");
   const [time, setTime] = useState({ hour: "", minute: "" });
   const [redirect, setRedirect] = useState(false);
+  const { setProgress } = useContext(ProgressContext);
+
   useEffect(() => {
     if (!id) {
       return;
     }
-    axios.get("http://localhost:4000/api/events/" + id).then((response) => {
-      const { data } = response;
-      setTitle(data.title);
-      setAddress(data.address);
-      setAddedPhotos(data.photos);
-      setDescription(data.description);
-      setStartDate(data.startDate);
-      setTime(data.time);
-    });
-  }, [id]);
+    setProgress(30);
+    axios.get("http://localhost:4000/api/events/" + id)
+      .then((response) => {
+        const { data } = response;
+        setTitle(data.title);
+        setAddress(data.address);
+        setAddedPhotos(data.photos);
+        setDescription(data.description);
+        setStartDate(data.startDate);
+        setTime(data.time);
+        setProgress(100); // Loading complete
+      })
+      .catch(() => {
+        setProgress(0); // Reset progress on error
+        toast.error('Error fetching event data. Please try again later.', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          // theme: 'colored',
+        });
+      });
+  }, [id,setProgress]);
   function inputHeader(text) {
     return <h2 className="text-2xl mt-4">{text}</h2>;
   }
@@ -58,6 +75,7 @@ export default function EventFormPage() {
       time,
     };
 
+    setProgress(30);
     try {
       if (id) {
         // Update event
@@ -65,32 +83,81 @@ export default function EventFormPage() {
           id,
           ...eventData,
         });
+        toast.success("Event updated successfully", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          // theme: "colored",
+        });
         setRedirect(true);
+        setProgress(100);
       } else {
         // Create new event
         await axios.post("http://localhost:4000/api/events", eventData);
+        toast.success("Event updated successfully", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          // theme: "colored",
+        });
         setRedirect(true);
+        setProgress(100);
       }
     } catch (error) {
       if (error.response) {
         const { status, data } = error.response;
         if (status === 401) {
-          alert("Unauthorized. Please log in.");
+          setProgress(0);
+          toast.error("Unauthorized. Please log in.", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          });
         } else if (status === 400) {
-          alert(`Bad request: ${data.error}`);
+          setProgress(0);
+          toast.error(`Bad request: ${data.error}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          });
         } else if (status === 500) {
-          alert("Internal server error. Please try again later.");
+          setProgress(0);
+          toast.error("Internal server error. Please try again later.", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          });
         } else {
-          alert("An error occurred. Please try again.");
+          setProgress(0);
+          toast.error("An error occurred. Please try again.", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          });
         }
       } else {
-        alert(
-          "An error occurred. Please check your network connection and try again."
-        );
+        setProgress(0);
+        toast.error("An error occurred. Please check your network connection and try again.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          // theme: "colored",
+        });
       }
     }
   }
-
+ 
   if (redirect) {
     return <Navigate to={"/account/events"} />;
   }

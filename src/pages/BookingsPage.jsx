@@ -1,19 +1,31 @@
 import AccountNav from "./AccountNav";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { ProgressContext } from './Layout';
 
 export default function BookingsPage() {
   const [bookings, setBookings] = useState([]);
+  const { setProgress } = useContext(ProgressContext);
 
   useEffect(() => {
     const fetchBookings = async () => {
+      setProgress(30);
       try {
         const response = await axios.get('http://localhost:4000/api/bookings');
         setBookings(response.data);
+        setProgress(100);
         // console.log(response.data); 
       } catch (error) {
-        console.error('Error fetching bookings:', error);
+        setProgress(0);
+        toast.error('Error fetching bookings. Please try again later.', {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          // theme: 'colored',
+        });
       }
     };
 

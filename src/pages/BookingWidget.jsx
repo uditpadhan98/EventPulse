@@ -2,6 +2,8 @@ import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { UserContext } from "../UserContext.jsx";
+import { toast } from "react-toastify";
+import { ProgressContext } from './Layout';
 
 export default function BookingWidget({ event }) {
   const [name, setName] = useState("");
@@ -9,6 +11,7 @@ export default function BookingWidget({ event }) {
   const [redirect, setRedirect] = useState("");
 
   const { user } = useContext(UserContext);
+  const { setProgress } = useContext(ProgressContext);
 
   useEffect(() => {
     if (user) {
@@ -17,8 +20,15 @@ export default function BookingWidget({ event }) {
   }, [user]);
 
   async function bookThisEvent() {
+    setProgress(30);
     if (!user) {
-      alert("Please log in first to book the event.");
+      setProgress(0);
+      toast.warn("Please log in first to book the event.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+      });
       setRedirect("/login");
       return;
     }
@@ -30,23 +40,63 @@ export default function BookingWidget({ event }) {
       });
 
       const bookingId = response.data._id;
+      setProgress(100);
+      toast.success("Booked for this event successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+      });
       setRedirect(`/account/bookings/${bookingId}`);
     } catch (error) {
       if (error.response) {
         const { status, data } = error.response;
         if (status === 401) {
-          alert("Unauthorized. Please log in.");
+          setProgress(0);
+          toast.error("Unauthorized. Please log in.", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          });
         } else if (status === 400) {
-          alert(`Bad request: ${data.error}`);
+          setProgress(0);
+          toast.error(`Bad request: ${data.error}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          });
         } else if (status === 500) {
-          alert("Internal server error. Please try again later.");
+          setProgress(0);
+          toast.error("Internal server error. Please try again later.", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          });
         } else {
-          alert("An error occurred. Please try again.");
+          setProgress(0);
+          toast.error("An error occurred. Please try again.", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          });
         }
       } else {
-        alert(
-          "An error occurred. Please check your network connection and try again."
-        );
+        setProgress(0);
+        toast.error("An error occurred. Please check your network connection and try again.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          // theme: "colored",
+        });
       }
     }
   }

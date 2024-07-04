@@ -3,16 +3,38 @@ import { UserContext } from "../UserContext.jsx";
 import { Navigate } from "react-router-dom";
 import axios from "axios";
 import AccountNav from "./AccountNav.jsx";
+import { toast } from "react-toastify";
+import { ProgressContext } from './Layout';
 
 export default function ProfilePage() {
   const [redirect, setRedirect] = useState(null);
   const { ready, user, setUser } = useContext(UserContext);
+  const { setProgress } = useContext(ProgressContext);
   // console.log(user);
 
   async function logout() {
-    await axios.post("http://localhost:4000/api/logout");
-    setRedirect("/");
-    setUser(null);
+    setProgress(30);
+    try {
+      await axios.post("http://localhost:4000/api/logout");
+      toast.success("Logged-out successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+      });
+      setProgress(100); // Complete progress
+      setRedirect("/");
+      setUser(null); // Clear user context
+    } catch (error) {
+      setProgress(0); // Reset progress on error
+      // console.error("Logout error:", error);
+      toast.error("Failed to logout. Please try again.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+      });
+    }
   }
 
   if (!ready) {

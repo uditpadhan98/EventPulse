@@ -1,6 +1,8 @@
-import { Link,Navigate } from "react-router-dom";
-import { useState } from "react";
+import { Link, Navigate } from "react-router-dom";
+import { useState,useContext } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
+import { ProgressContext } from './Layout';
 
 export default function RegisterPage() {
   const [name, setName] = useState("");
@@ -8,8 +10,11 @@ export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const { setProgress } = useContext(ProgressContext);
+
   async function registerUser(ev) {
     ev.preventDefault();
+    setProgress(30);
     try {
       await axios.post("http://localhost:4000/api/register", {
         name,
@@ -17,18 +22,44 @@ export default function RegisterPage() {
         email,
         password,
       });
-      alert("Registration successful. Now you can log in");
+      toast.success("Registration successful. Now you can log in", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+      });
+      setProgress(100);
       setRedirect(true);
     } catch (error) {
       if (error.response) {
         const { status, data } = error.response;
         if (status === 422) {
-          alert(`Registration failed: ${data.error}`);
+          setProgress(0);
+          toast.error(`Registration failed: ${data.error}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+          });
         } else {
-          alert("Registration failed. Please try again later.");
+          setProgress(0);
+          toast.error("Registration failed. Please try again later.", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          });
         }
       } else {
-        alert("Registration failed. Please check your network connection and try again.");
+        setProgress(0);
+        toast.error("Registration failed. Please check your network connection and try again.", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          // theme: "colored",
+        });
       }
     }
   }

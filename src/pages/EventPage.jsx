@@ -1,20 +1,27 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState,useContext } from "react";
 import axios from "axios";
 import BookingWidget from "./BookingWidget";
+import { ProgressContext } from './Layout';
 
 export default function EventPage() {
   const { id } = useParams();
   const [events, setEvents] = useState(null);
+  const { setProgress } = useContext(ProgressContext);
+
   useEffect(() => {
     if (!id) {
       return;
     }
+    setProgress(30);
     axios.get(`http://localhost:4000/api/events/${id}`).then((response) => {
       setEvents(response.data);
+      setProgress(100);
       // console.log(response.data);
+    }).catch(() => {
+      setProgress(0); // Reset progress on error
     });
-  }, [id]);
+  }, [id,setProgress]);
 
   if (!events) return "";
 

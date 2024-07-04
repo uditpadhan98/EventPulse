@@ -1,21 +1,49 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState ,useContext} from "react";
 import axios from "axios";
+import { ProgressContext } from './Layout';
+import { toast } from 'react-toastify';
 
 export default function BookingPage() {
   const { id } = useParams();
   const [booking, setBooking] = useState(null);
+  const { setProgress } = useContext(ProgressContext);
+
   useEffect(() => {
-    if (id) {
-      axios.get("http://localhost:4000/api/bookings").then((response) => {
-        const foundBooking = response.data.find(({ _id }) => _id === id);
-        if (foundBooking) {
-          setBooking(foundBooking);
-          // console.log(booking);
+    const fetchBooking = async () => {
+      if (id) {
+        setProgress(30); // Start loading
+        try {
+          const response = await axios.get("http://localhost:4000/api/bookings");
+          const foundBooking = response.data.find(({ _id }) => _id === id);
+          if (foundBooking) {
+            setBooking(foundBooking);
+            setProgress(100); // Loading complete
+          } else {
+            setProgress(0); // Reset progress
+            toast.error("Booking not found.", {
+              position: 'top-right',
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              // theme: "colored",
+            });
+          }
+        } catch (error) {
+          setProgress(0); // Reset progress
+          toast.error("Error fetching booking. Please try again later.", {
+            position: 'top-right',
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          });
         }
-      });
-    }
-  }, [id]);
+      }
+    };
+
+    fetchBooking();
+  }, [id, setProgress]);
 
   if (!booking) {
     return "";

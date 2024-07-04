@@ -2,36 +2,83 @@ import { Link, Navigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { UserContext } from "../UserContext.jsx";
+import { toast } from "react-toastify";
+import { ProgressContext } from './Layout';
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
   const { setUser } = useContext(UserContext);
+  const { setProgress } = useContext(ProgressContext);
+
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
+    setProgress(30);
     try {
       const { data } = await axios.post("http://localhost:4000/api/login", {
         email,
         password,
       });
       setUser(data);
-      alert("Login successful");
+      setProgress(100);
+      toast.success("Logged-In successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        // theme: "colored",
+      });
       setRedirect(true);
     } catch (error) {
       if (error.response) {
         const { status } = error.response;
         if (status === 404) {
-          alert("Email not found");
+          setProgress(0);
+          toast.error("Email not found", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          });
         } else if (status === 422) {
-          alert("Password not correct");
+          setProgress(0);
+          toast.error("Password not correct", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          });
         } else if (status === 500) {
-          alert("Internal server error");
+          setProgress(0);
+          toast.error("Internal server error", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          });
         } else {
-          alert("Login failed");
+          setProgress(0);
+          toast.error("Login failed", {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          });
         }
       } else {
-        alert("Login failed");
+        setProgress(0);
+        toast.error("Login failed", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          // theme: "colored",
+        });
       }
     }
   }

@@ -1,16 +1,43 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import HomePage from "./HomePage";
 import Footer from "./Footer";
+import { toast } from "react-toastify";
+import { ProgressContext } from './Layout';
 
 export default function IndexPage() {
   const [events, setEvents] = useState([]);
+  const { setProgress } = useContext(ProgressContext);
+
+  // useEffect(() => {
+  //   axios.get("http://localhost:4000/api/events").then((response) => {
+  //     setEvents(response.data);
+  //   });
+  // }, []);
+
   useEffect(() => {
-    axios.get("http://localhost:4000/api/events").then((response) => {
-      setEvents(response.data);
-    });
-  }, []);
+    const fetchEvents = async () => {
+      setProgress(30); // Start loading
+      try {
+        const response = await axios.get("http://localhost:4000/api/events");
+        setEvents(response.data);
+        setProgress(100); // Loading complete
+      } catch (error) {
+        setProgress(0); // Reset progress on error
+        toast.error("Error fetching events. Please try again later.", {
+          position: 'top-right',
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          // theme: "colored",
+        });
+      }
+    };
+
+    fetchEvents();
+  }, [setProgress]);
+
   return (
     <>
       <HomePage />
