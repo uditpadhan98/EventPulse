@@ -14,22 +14,25 @@ function getUserDataFromReq(req) {
 }
 
 router.post("/api/bookings", async (req, res) => {
-  const userData = await getUserDataFromReq(req);
-  const { event, startDate, endDate, name, phone } = req.body;
-  Booking.create({
-    event,
-    startDate,
-    endDate,
-    name,
-    phone,
-    user: userData.id,
-  })
-    .then((doc) => {
-      res.json(doc);
-    })
-    .catch((err) => {
-      throw err;
+  try {
+    const userData = await getUserDataFromReq(req);
+    const { event, name, phone } = req.body;
+
+    const booking = await Booking.create({
+      event,
+      name,
+      phone,
+      user: userData.id,
     });
+
+    res.status(201).json(booking);
+  } catch (error) {
+    if (error.message === 'No token provided' || error === 'Invalid token') {
+      res.status(401).json({ error: 'Unauthorized' });
+    } else {
+      res.status(500).json({ error: 'Internal server error' });
+    }
+  }
 });
 
 router.get("/api/bookings", async (req, res) => {

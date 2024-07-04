@@ -7,6 +7,7 @@ import AccountNav from "./AccountNav.jsx";
 export default function ProfilePage() {
   const [redirect, setRedirect] = useState(null);
   const { ready, user, setUser } = useContext(UserContext);
+  // console.log(user);
 
   async function logout() {
     await axios.post("http://localhost:4000/api/logout");

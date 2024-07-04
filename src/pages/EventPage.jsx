@@ -12,6 +12,7 @@ export default function EventPage() {
     }
     axios.get(`http://localhost:4000/api/events/${id}`).then((response) => {
       setEvents(response.data);
+      // console.log(response.data);
     });
   }, [id]);
 
@@ -39,7 +40,8 @@ export default function EventPage() {
           </p>
           <p className="font-bold">
             Time: {events.time.hour} : {events.time.minute}
-          </p>
+          </p >
+          <p className="font-bold"> Organiser : {events.organiser}</p>
         </div>
         <div>
           <BookingWidget event={events} />

@@ -11,7 +11,7 @@ export default function EventFormPage() {
   const [addedPhotos, setAddedPhotos] = useState("");
   const [description, setDescription] = useState("");
   const [startDate, setStartDate] = useState("");
-  const [time, setTime] = useState({ hour: '', minute: ''});
+  const [time, setTime] = useState({ hour: "", minute: "" });
   const [redirect, setRedirect] = useState(false);
   useEffect(() => {
     if (!id) {
@@ -37,7 +37,7 @@ export default function EventFormPage() {
     const [hour, minute] = ev.target.value.split(":");
     setTime({ hour, minute });
   }
-  
+
   function preInput(header, description) {
     return (
       <>
@@ -57,18 +57,37 @@ export default function EventFormPage() {
       startDate,
       time,
     };
-    console.log(eventData);
-    if (id) {
-      // update
-      await axios.put("http://localhost:4000/api/events", {
-        id,
-        ...eventData,
-      });
-      setRedirect(true);
-    } else {
-      // new place
-      await axios.post("http://localhost:4000/api/events", eventData);
-      setRedirect(true);
+
+    try {
+      if (id) {
+        // Update event
+        await axios.put("http://localhost:4000/api/events", {
+          id,
+          ...eventData,
+        });
+        setRedirect(true);
+      } else {
+        // Create new event
+        await axios.post("http://localhost:4000/api/events", eventData);
+        setRedirect(true);
+      }
+    } catch (error) {
+      if (error.response) {
+        const { status, data } = error.response;
+        if (status === 401) {
+          alert("Unauthorized. Please log in.");
+        } else if (status === 400) {
+          alert(`Bad request: ${data.error}`);
+        } else if (status === 500) {
+          alert("Internal server error. Please try again later.");
+        } else {
+          alert("An error occurred. Please try again.");
+        }
+      } else {
+        alert(
+          "An error occurred. Please check your network connection and try again."
+        );
+      }
     }
   }
 

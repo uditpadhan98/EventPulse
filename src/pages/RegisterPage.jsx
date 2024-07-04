@@ -19,8 +19,17 @@ export default function RegisterPage() {
       });
       alert("Registration successful. Now you can log in");
       setRedirect(true);
-    } catch (e) {
-      alert("Registration failed. Please try again later");
+    } catch (error) {
+      if (error.response) {
+        const { status, data } = error.response;
+        if (status === 422) {
+          alert(`Registration failed: ${data.error}`);
+        } else {
+          alert("Registration failed. Please try again later.");
+        }
+      } else {
+        alert("Registration failed. Please check your network connection and try again.");
+      }
     }
   }
 

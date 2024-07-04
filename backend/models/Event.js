@@ -7,10 +7,11 @@ const timeSchema = new mongoose.Schema({
 
 const eventSchema = new mongoose.Schema({
   owner: {type:mongoose.Schema.Types.ObjectId, ref:'User'},
-  title: String,
-  address: String,
-  photos: [String],
-  description: String,
+  organiser: {type:String, ref:'User'},
+  title: { type: String, required: true },
+  address: { type: String, required: true },
+  photos: { type: [String], required: true },
+  description: { type: String, required: true },
   startDate: {type:Date, required:true},
   time: { type: timeSchema, required: true },
 });
