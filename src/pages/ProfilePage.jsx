@@ -27,7 +27,7 @@ export default function ProfilePage() {
       setRedirect("/");
       setUser(null); // Clear user context
     } catch (error) {
-      setProgress(0); // Reset progress on error
+      setProgress(100); // Reset progress on error
       // console.error("Logout error:", error);
       toast.error("Failed to logout. Please try again.", {
         position: "top-right",

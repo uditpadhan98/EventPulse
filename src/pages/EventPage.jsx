@@ -4,6 +4,7 @@ import axios from "axios";
 import BookingWidget from "./BookingWidget";
 import { ProgressContext } from './Layout';
 import { BASE_URL } from "../Helper";
+import { toast } from "react-toastify";
 
 export default function EventPage() {
   const { id } = useParams();
@@ -20,7 +21,14 @@ export default function EventPage() {
       setProgress(100);
       // console.log(response.data);
     }).catch(() => {
-      setProgress(0); // Reset progress on error
+      setProgress(100); // Reset progress on error
+      toast.error("Please check your network connection and try again.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        // theme: "colored",
+      });
     });
   }, [id,setProgress]);
 

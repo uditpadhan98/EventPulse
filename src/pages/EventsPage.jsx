@@ -4,6 +4,7 @@ import {useEffect, useState,useContext} from "react";
 import axios from "axios";
 import { ProgressContext } from './Layout';
 import { BASE_URL } from "../Helper";
+import { toast } from "react-toastify";
 
 export default function EventsPage() {
   const [events,setEvents] = useState([]);
@@ -16,7 +17,14 @@ export default function EventsPage() {
       setProgress(100);
       // console.log(data);
     }).catch(() => {
-      setProgress(0); // Reset progress on error
+      setProgress(100); // Reset progress on error
+      toast.error("Please check your network connection and try again.", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        // theme: "colored",
+      });
     });
   }, [setProgress]);
   return (

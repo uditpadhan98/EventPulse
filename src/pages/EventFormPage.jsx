@@ -35,7 +35,7 @@ export default function EventFormPage() {
         setProgress(100); // Loading complete
       })
       .catch(() => {
-        setProgress(0); // Reset progress on error
+        setProgress(100); // Reset progress on error
         toast.error('Error fetching event data. Please try again later.', {
           position: 'top-right',
           autoClose: 5000,

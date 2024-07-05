@@ -21,7 +21,7 @@ export default function BookingPage() {
             setBooking(foundBooking);
             setProgress(100); // Loading complete
           } else {
-            setProgress(0); // Reset progress
+            setProgress(100); // Reset progress
             toast.error("Booking not found.", {
               position: 'top-right',
               autoClose: 5000,
@@ -31,7 +31,7 @@ export default function BookingPage() {
             });
           }
         } catch (error) {
-          setProgress(0); // Reset progress
+          setProgress(100); // Reset progress
           toast.error("Error fetching booking. Please try again later.", {
             position: 'top-right',
             autoClose: 5000,

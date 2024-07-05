@@ -32,10 +32,10 @@ export default function RegisterPage() {
       setProgress(100);
       setRedirect(true);
     } catch (error) {
+      setProgress(100);
       if (error.response) {
         const { status, data } = error.response;
         if (status === 422) {
-          setProgress(0);
           toast.error(`Registration failed: ${data.error}`, {
             position: "top-right",
             autoClose: 5000,
@@ -43,7 +43,7 @@ export default function RegisterPage() {
             closeOnClick: true,
           });
         } else {
-          setProgress(0);
+          // setProgress(0);
           toast.error("Registration failed. Please try again later.", {
             position: "top-right",
             autoClose: 5000,
@@ -53,7 +53,7 @@ export default function RegisterPage() {
           });
         }
       } else {
-        setProgress(0);
+        // setProgress(0);
         toast.error("Registration failed. Please check your network connection and try again.", {
           position: "top-right",
           autoClose: 5000,

@@ -19,7 +19,7 @@ export default function BookingsPage() {
         setProgress(100);
         // console.log(response.data); 
       } catch (error) {
-        setProgress(0);
+        setProgress(100);
         toast.error('Error fetching bookings. Please try again later.', {
           position: 'top-right',
           autoClose: 5000,

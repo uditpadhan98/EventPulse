@@ -25,7 +25,7 @@ export default function IndexPage() {
         setEvents(response.data);
         setProgress(100); // Loading complete
       } catch (error) {
-        setProgress(0); // Reset progress on error
+        setProgress(100); // Reset progress on error
         toast.error("Error fetching events. Please try again later.", {
           position: 'top-right',
           autoClose: 5000,

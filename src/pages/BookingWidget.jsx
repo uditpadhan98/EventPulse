@@ -50,10 +50,10 @@ export default function BookingWidget({ event }) {
       });
       setRedirect(`/account/bookings/${bookingId}`);
     } catch (error) {
+      setProgress(100);
       if (error.response) {
         const { status, data } = error.response;
         if (status === 401) {
-          setProgress(0);
           toast.error("Unauthorized. Please log in.", {
             position: "top-right",
             autoClose: 5000,
@@ -62,7 +62,7 @@ export default function BookingWidget({ event }) {
             // theme: "colored",
           });
         } else if (status === 400) {
-          setProgress(0);
+          // setProgress(0);
           toast.error(`Bad request: ${data.error}`, {
             position: "top-right",
             autoClose: 5000,
@@ -71,7 +71,7 @@ export default function BookingWidget({ event }) {
             // theme: "colored",
           });
         } else if (status === 500) {
-          setProgress(0);
+          // setProgress(0);
           toast.error("Internal server error. Please try again later.", {
             position: "top-right",
             autoClose: 5000,
@@ -80,7 +80,7 @@ export default function BookingWidget({ event }) {
             // theme: "colored",
           });
         } else {
-          setProgress(0);
+          // setProgress(0);
           toast.error("An error occurred. Please try again.", {
             position: "top-right",
             autoClose: 5000,
@@ -90,7 +90,7 @@ export default function BookingWidget({ event }) {
           });
         }
       } else {
-        setProgress(0);
+        // setProgress(0);
         toast.error("An error occurred. Please check your network connection and try again.", {
           position: "top-right",
           autoClose: 5000,

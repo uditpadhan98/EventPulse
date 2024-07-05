@@ -33,9 +33,9 @@ export default function LoginPage() {
       setRedirect(true);
     } catch (error) {
       if (error.response) {
+        setProgress(100);
         const { status } = error.response;
         if (status === 404) {
-          setProgress(0);
           toast.error("Email not found", {
             position: "top-right",
             autoClose: 5000,
@@ -44,7 +44,7 @@ export default function LoginPage() {
             // theme: "colored",
           });
         } else if (status === 422) {
-          setProgress(0);
+          // setProgress(0);
           toast.error("Password not correct", {
             position: "top-right",
             autoClose: 5000,
@@ -53,7 +53,7 @@ export default function LoginPage() {
             // theme: "colored",
           });
         } else if (status === 500) {
-          setProgress(0);
+          // setProgress(0);
           toast.error("Internal server error", {
             position: "top-right",
             autoClose: 5000,
@@ -62,7 +62,7 @@ export default function LoginPage() {
             // theme: "colored",
           });
         } else {
-          setProgress(0);
+          // setProgress(0);
           toast.error("Login failed", {
             position: "top-right",
             autoClose: 5000,
@@ -72,7 +72,7 @@ export default function LoginPage() {
           });
         }
       } else {
-        setProgress(0);
+        // setProgress(0);
         toast.error("Login failed", {
           position: "top-right",
           autoClose: 5000,
