@@ -179,29 +179,29 @@ export default function EventFormPage() {
       <form onSubmit={saveEvent}>
         {preInput(
           "Title",
-          "Title for your place. should be short and catchy as in advertisement"
+          "Title for your Event. Should be short and catchy as in advertisement"
         )}
         <input
           type="text"
           value={title}
           onChange={(ev) => setTitle(ev.target.value)}
-          placeholder="title, for example: My lovely apt"
+          placeholder="title, for example: Orientation for freshers"
         />
-        {preInput("Address", "Address to this place")}
+        {preInput("Address", "Address for this event")}
         <input
           type="text"
           value={address}
           onChange={(ev) => setAddress(ev.target.value)}
           placeholder="address"
         />
-        {preInput("Description", "description of the place")}
+        {preInput("Description", "description of the event")}
         <textarea
           value={description}
           onChange={(ev) => setDescription(ev.target.value)}
         />
         {preInput(
           "Start Date & Time",
-          "add Start Date & Time, remember to have some time window for cleaning the room between guests"
+          "add Start Date & Time"
         )}
         <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
           <div>
