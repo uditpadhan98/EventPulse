@@ -1,4 +1,5 @@
-import hero from "../images/hero.png"
+import hero from "../images/hero.png";
+
 
 export default function HomePage() {
   return (
@@ -10,8 +11,9 @@ export default function HomePage() {
               Host, Connect, Celebrate: Your Events, Our Platform!
             </h1>
             <p className="text-lg md:text-xl">
-              Book and learn helpful tips from 3,168+ mentors in world-class
-              companies with our global community.
+            EventPulse, where college experience comes alive! 
+            Whether you're looking to join exciting events, host your own, or explore what's 
+            happening on campus, we've got you covered.
             </p>
           </div>
 
