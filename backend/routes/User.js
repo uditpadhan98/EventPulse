@@ -56,7 +56,7 @@ router.post("/api/login", async (req, res) => {
         if (err) {
           return res.status(500).json({ error: "Internal server error" });
         }
-        res.cookie("token", token).status(200).json(userDoc);
+        res.cookie("token", token,{ sameSite: "None", secure: true }).status(200).json(userDoc);
       }
     );
   } catch (error) {
@@ -78,7 +78,7 @@ router.get("/api/profile", (req, res) => {
 });
 
 router.post("/api/logout", (req, res) => {
-  res.cookie("token", "").json(true);
+  res.cookie("token", "",{ sameSite: "None", secure: true }).json(true);
 });
 
 module.exports = router;
