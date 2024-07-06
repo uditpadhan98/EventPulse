@@ -12,7 +12,12 @@ export default function EventsPage() {
 
   useEffect(() => {
     setProgress(30);
-    axios.get(`${BASE_URL}/api/user-events`).then(({data}) => {
+    axios.get(`${BASE_URL}/api/user-events`,{
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      withCredentials: true,
+    }).then(({data}) => {
       setEvents(data);
       setProgress(100);
       // console.log(data);

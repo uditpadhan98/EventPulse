@@ -14,7 +14,12 @@ export default function BookingsPage() {
     const fetchBookings = async () => {
       setProgress(30);
       try {
-        const response = await axios.get(`${BASE_URL}/api/bookings`);
+        const response = await axios.get(`${BASE_URL}/api/bookings`,{
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          withCredentials: true,
+        });
         setBookings(response.data);
         setProgress(100);
         // console.log(response.data); 

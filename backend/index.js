@@ -19,7 +19,9 @@ app.use(
   })
 );
 
-app.use("/", userRoutes, bookingRoutes, eventsRoutes);
+app.use("/", userRoutes);
+app.use("/", eventsRoutes);
+app.use("/", bookingRoutes);
 
 const PORT = 4000;
 
@@ -27,6 +29,7 @@ mongoose
   .connect(process.env.MONGO_URL)
   .then(() => {
     app.listen(PORT, () => console.log(`Connected on Server Port: ${PORT}`));
+    // console.log(process.env.BASE);
   })
   .catch((err) => console.log(`${err} did not connect`));
 
