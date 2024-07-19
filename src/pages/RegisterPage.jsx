@@ -1,8 +1,8 @@
 import { Link, Navigate } from "react-router-dom";
-import { useState,useContext } from "react";
+import { useState, useContext } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { ProgressContext } from './Layout';
+import { ProgressContext } from "./Layout";
 import { BASE_URL } from "../Helper";
 
 export default function RegisterPage() {
@@ -12,10 +12,12 @@ export default function RegisterPage() {
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
   const { setProgress } = useContext(ProgressContext);
+  const [loading, setLoading] = useState(false);
 
   async function registerUser(ev) {
     ev.preventDefault();
     setProgress(30);
+    setLoading(true);
     try {
       await axios.post(`${BASE_URL}/api/register`, {
         name,
@@ -30,8 +32,10 @@ export default function RegisterPage() {
         closeOnClick: true,
       });
       setProgress(100);
+      setLoading(false);
       setRedirect(true);
     } catch (error) {
+      setLoading(false);
       setProgress(100);
       if (error.response) {
         const { status, data } = error.response;
@@ -54,13 +58,16 @@ export default function RegisterPage() {
         }
       } else {
         // setProgress(0);
-        toast.error("Registration failed. Please check your network connection and try again.", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          // theme: "colored",
-        });
+        toast.error(
+          "Registration failed. Please check your network connection and try again.",
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          }
+        );
       }
     }
   }
@@ -98,7 +105,12 @@ export default function RegisterPage() {
             value={password}
             onChange={(ev) => setPassword(ev.target.value)}
           />
-          <button className="primary">Register</button>
+          <button
+            className={loading ? "primary cursor-not-allowed" : "primary"}
+            disabled={loading}
+          >
+            Register
+          </button>
           <div className="text-center py-2 text-gray-500">
             Already a member?{" "}
             <Link className="underline text-black" to={"/login"}>

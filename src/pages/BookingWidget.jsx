@@ -3,13 +3,14 @@ import axios from "axios";
 import { Navigate } from "react-router-dom";
 import { UserContext } from "../UserContext.jsx";
 import { toast } from "react-toastify";
-import { ProgressContext } from './Layout';
+import { ProgressContext } from "./Layout";
 import { BASE_URL } from "../Helper";
 
 export default function BookingWidget({ event }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [redirect, setRedirect] = useState("");
+  const [loading,setLoading] = useState(false);
 
   const { user } = useContext(UserContext);
   const { setProgress } = useContext(ProgressContext);
@@ -22,8 +23,10 @@ export default function BookingWidget({ event }) {
 
   async function bookThisEvent() {
     setProgress(30);
+    setLoading(true);
     if (!user) {
       setProgress(0);
+      setLoading(false);
       toast.warn("Please log in first to book the event.", {
         position: "top-right",
         autoClose: 5000,
@@ -42,6 +45,7 @@ export default function BookingWidget({ event }) {
 
       const bookingId = response.data._id;
       setProgress(100);
+      setLoading(false);
       toast.success("Booked for this event successfully", {
         position: "top-right",
         autoClose: 5000,
@@ -50,6 +54,7 @@ export default function BookingWidget({ event }) {
       });
       setRedirect(`/account/bookings/${bookingId}`);
     } catch (error) {
+      setLoading(false);
       setProgress(100);
       if (error.response) {
         const { status, data } = error.response;
@@ -91,13 +96,16 @@ export default function BookingWidget({ event }) {
         }
       } else {
         // setProgress(0);
-        toast.error("An error occurred. Please check your network connection and try again.", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          // theme: "colored",
-        });
+        toast.error(
+          "An error occurred. Please check your network connection and try again.",
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          }
+        );
       }
     }
   }
@@ -124,7 +132,11 @@ export default function BookingWidget({ event }) {
           />
         </div>
       </div>
-      <button onClick={bookThisEvent} className="primary mt-4">
+      <button
+        onClick={bookThisEvent}
+        className={loading ? "primary mt-4 cursor-not-allowed" : "primary mt-4"}
+        disabled={loading}
+      >
         Book this event
       </button>
     </div>

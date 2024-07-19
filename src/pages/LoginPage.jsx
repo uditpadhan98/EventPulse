@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import axios from "axios";
 import { UserContext } from "../UserContext.jsx";
 import { toast } from "react-toastify";
-import { ProgressContext } from './Layout';
+import { ProgressContext } from "./Layout";
 import { BASE_URL } from "../Helper";
 
 export default function LoginPage() {
@@ -12,10 +12,12 @@ export default function LoginPage() {
   const [redirect, setRedirect] = useState(false);
   const { setUser } = useContext(UserContext);
   const { setProgress } = useContext(ProgressContext);
+  const [loading, setLoading] = useState(false);
 
   async function handleLoginSubmit(ev) {
     ev.preventDefault();
     setProgress(30);
+    setLoading(true);
     try {
       const { data } = await axios.post(`${BASE_URL}/api/login`, {
         email,
@@ -31,8 +33,10 @@ export default function LoginPage() {
         // theme: "colored",
       });
       setRedirect(true);
+      setLoading(false);
     } catch (error) {
       if (error.response) {
+        setLoading(false);
         setProgress(100);
         const { status } = error.response;
         if (status === 404) {
@@ -105,7 +109,12 @@ export default function LoginPage() {
             value={password}
             onChange={(ev) => setPassword(ev.target.value)}
           />
-          <button className="primary">Login</button>
+          <button
+            className={loading ? "primary cursor-not-allowed" : "primary"}
+            disabled={loading}
+          >
+            Login
+          </button>
           <div className="text-center py-2 text-gray-500">
             Don't have an account yet?{" "}
             <Link className="underline text-black" to={"/register"}>

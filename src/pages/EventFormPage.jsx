@@ -1,10 +1,10 @@
-import { useEffect, useState,useContext } from "react";
+import { useEffect, useState, useContext } from "react";
 import axios from "axios";
 import AccountNav from "./AccountNav";
 import { Navigate, useParams } from "react-router-dom";
 import UploadWidget from "../UploadWidget";
 import { toast } from "react-toastify";
-import { ProgressContext } from './Layout';
+import { ProgressContext } from "./Layout";
 import { BASE_URL } from "../Helper";
 
 export default function EventFormPage() {
@@ -17,13 +17,16 @@ export default function EventFormPage() {
   const [time, setTime] = useState({ hour: "", minute: "" });
   const [redirect, setRedirect] = useState(false);
   const { setProgress } = useContext(ProgressContext);
+  const [loading,setLoading] = useState(false);
 
   useEffect(() => {
     if (!id) {
       return;
     }
     setProgress(30);
-    axios.get(`${BASE_URL}/api/events/`+id)
+    setLoading(true);
+    axios
+      .get(`${BASE_URL}/api/events/` + id)
       .then((response) => {
         const { data } = response;
         setTitle(data.title);
@@ -33,18 +36,20 @@ export default function EventFormPage() {
         setStartDate(data.startDate);
         setTime(data.time);
         setProgress(100); // Loading complete
+        setLoading(false);
       })
       .catch(() => {
+        setLoading(false);
         setProgress(100); // Reset progress on error
-        toast.error('Error fetching event data. Please try again later.', {
-          position: 'top-right',
+        toast.error("Error fetching event data. Please try again later.", {
+          position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
           closeOnClick: true,
           // theme: 'colored',
         });
       });
-  }, [id,setProgress]);
+  }, [id, setProgress]);
   function inputHeader(text) {
     return <h2 className="text-2xl mt-4">{text}</h2>;
   }
@@ -75,7 +80,7 @@ export default function EventFormPage() {
       startDate,
       time,
     };
-
+    setLoading(true);
     setProgress(30);
     try {
       if (id) {
@@ -93,6 +98,7 @@ export default function EventFormPage() {
         });
         setRedirect(true);
         setProgress(100);
+        setLoading(false);
       } else {
         // Create new event
         await axios.post(`${BASE_URL}/api/events`, eventData);
@@ -105,8 +111,10 @@ export default function EventFormPage() {
         });
         setRedirect(true);
         setProgress(100);
+        setLoading(false);
       }
     } catch (error) {
+      setLoading(false);
       if (error.response) {
         const { status, data } = error.response;
         if (status === 401) {
@@ -147,18 +155,22 @@ export default function EventFormPage() {
           });
         }
       } else {
+        setLoading(false);
         setProgress(0);
-        toast.error("An error occurred. Please check your network connection and try again.", {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          // theme: "colored",
-        });
+        toast.error(
+          "An error occurred. Please check your network connection and try again.",
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            // theme: "colored",
+          }
+        );
       }
     }
   }
- 
+
   if (redirect) {
     return <Navigate to={"/account/events"} />;
   }
@@ -199,10 +211,7 @@ export default function EventFormPage() {
           value={description}
           onChange={(ev) => setDescription(ev.target.value)}
         />
-        {preInput(
-          "Start Date & Time",
-          "add Start Date & Time"
-        )}
+        {preInput("Start Date & Time", "add Start Date & Time")}
         <div className="grid gap-2 grid-cols-2 md:grid-cols-4">
           <div>
             <h3 className="mt-2 -mb-1">Start Date</h3>
@@ -223,7 +232,14 @@ export default function EventFormPage() {
             />
           </div>
         </div>
-        <button className="primary my-4">Save</button>
+        <button
+          className={
+            loading ? "primary my-4 cursor-not-allowed" : "primary my-4"
+          }
+          disabled={loading}
+        >
+          Save
+        </button>
       </form>
     </div>
   );
